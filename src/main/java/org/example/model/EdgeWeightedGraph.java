@@ -1,5 +1,6 @@
 package org.example.model;
 
+import org.example.metrics.PerformanceTracker;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -8,15 +9,22 @@ public class EdgeWeightedGraph {
     private final int V;
     private int E;
     private final List<List<Edge>> adj;
+    private final PerformanceTracker tracker;
 
-    public EdgeWeightedGraph(int V) {
+    public EdgeWeightedGraph(int V, PerformanceTracker tracker) {
         if (V < 0) throw new IllegalArgumentException("Number of vertices must be non-negative");
         this.V = V;
+        this.tracker = tracker;
         this.E = 0;
         this.adj = new ArrayList<>(V);
         for (int i = 0; i < V; i++) {
             adj.add(new ArrayList<>());
+            if (tracker != null) tracker.incAllocations();
         }
+    }
+
+    public EdgeWeightedGraph(int V) {
+        this(V, null);
     }
 
     public void addEdge(Edge e) {
@@ -26,6 +34,7 @@ public class EdgeWeightedGraph {
         validateVertex(w);
         adj.get(v).add(e);
         adj.get(w).add(e);
+        if (tracker != null) tracker.incArrayAccesses(2);
         E++;
     }
 
@@ -37,7 +46,9 @@ public class EdgeWeightedGraph {
     public Iterable<Edge> edges() {
         List<Edge> list = new ArrayList<>();
         for (int v = 0; v < V; v++) {
+            if (tracker != null) tracker.incArrayAccesses();
             for (Edge e : adj.get(v)) {
+                if (tracker != null) tracker.incComparisons();
                 if (e.other(v) > v) list.add(e);
             }
         }
@@ -75,4 +86,3 @@ public class EdgeWeightedGraph {
         if (v < 0 || v >= V) throw new IllegalArgumentException("Vertex " + v + " is not between 0 and " + (V - 1));
     }
 }
-

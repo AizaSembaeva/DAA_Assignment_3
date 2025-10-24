@@ -19,6 +19,7 @@ public class UF {
         for (int i = 0; i < n; i++) {
             parent[i] = i;
             rank[i] = 0;
+            if (tracker != null) tracker.incArrayAccesses(2);
         }
     }
 
@@ -30,8 +31,12 @@ public class UF {
         if (x < 0 || x >= n) {
             throw new IllegalArgumentException("Index out of bounds: " + x);
         }
+        if (tracker != null) tracker.incArrayAccesses();
         if (parent[x] != x) {
-            parent[x] = find(parent[x]);
+            if (tracker != null) tracker.incComparisons();
+            int root = find(parent[x]);
+            if (tracker != null) tracker.incArrayAccesses();
+            parent[x] = root;
         }
         return parent[x];
     }
@@ -39,20 +44,37 @@ public class UF {
     public void union(int x, int y) {
         int rootX = find(x);
         int rootY = find(y);
+
+        if (tracker != null) tracker.incComparisons();
         if (rootX == rootY) return;
 
+        if (tracker != null) tracker.incUnions();
+
+        if (tracker != null) tracker.incArrayAccesses(2);
+        if (tracker != null) tracker.incComparisons();
+
         if (rank[rootX] < rank[rootY]) {
+            if (tracker != null) tracker.incArrayAccesses();
             parent[rootX] = rootY;
+
         } else if (rank[rootX] > rank[rootY]) {
+            if (tracker != null) tracker.incArrayAccesses();
             parent[rootY] = rootX;
+
         } else {
+            if (tracker != null) tracker.incArrayAccesses();
             parent[rootY] = rootX;
+            if (tracker != null) tracker.incArrayAccesses();
             rank[rootX]++;
         }
     }
 
+
     public boolean connected(int x, int y) {
-        return find(x) == find(y);
+        int rootX = find(x);
+        int rootY = find(y);
+        if (tracker != null) tracker.incComparisons();
+        return rootX == rootY;
     }
 
     public int size() {
