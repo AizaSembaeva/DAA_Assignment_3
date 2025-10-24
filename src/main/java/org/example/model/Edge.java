@@ -1,5 +1,6 @@
 package org.example.model;
 
+import org.example.metrics.PerformanceTracker;
 import java.util.Objects;
 
 public class Edge implements Comparable<Edge> {
@@ -28,6 +29,11 @@ public class Edge implements Comparable<Edge> {
         return weight;
     }
 
+    public int compareTo(Edge that, PerformanceTracker tracker) {
+        if (tracker != null) tracker.incComparisons();
+        return Double.compare(this.weight, that.weight);
+    }
+
     @Override
     public int compareTo(Edge that) {
         return Double.compare(this.weight, that.weight);
@@ -54,4 +60,3 @@ public class Edge implements Comparable<Edge> {
         return Objects.hash(min, max, weight);
     }
 }
-
