@@ -1,15 +1,16 @@
 package org.example.model;
 
 import org.example.metrics.PerformanceTracker;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class EdgeWeightedGraph {
     private final int V;
     private int E;
     private final List<List<Edge>> adj;
     private final PerformanceTracker tracker;
+    private int id;
+    private Map<String, Integer> nameToIndex;
+    private Map<Integer, String> indexToName;
 
     public EdgeWeightedGraph(int V, PerformanceTracker tracker) {
         if (V < 0) throw new IllegalArgumentException("Number of vertices must be non-negative");
@@ -83,6 +84,31 @@ public class EdgeWeightedGraph {
     }
 
     private void validateVertex(int v) {
-        if (v < 0 || v >= V) throw new IllegalArgumentException("Vertex " + v + " is not between 0 and " + (V - 1));
+        if (v < 0 || v >= V)
+            throw new IllegalArgumentException("Vertex " + v + " is not between 0 and " + (V - 1));
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setNameToIndex(Map<String, Integer> map) {
+        this.nameToIndex = map;
+    }
+
+    public Map<String, Integer> getNameToIndex() {
+        return nameToIndex;
+    }
+
+    public void setIndexToName(Map<Integer, String> map) {
+        this.indexToName = map;
+    }
+
+    public Map<Integer, String> getIndexToName() {
+        return indexToName;
     }
 }
