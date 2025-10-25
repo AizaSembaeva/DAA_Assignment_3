@@ -29,6 +29,14 @@ public class Edge implements Comparable<Edge> {
         return weight;
     }
 
+    public int v() {
+        return v;
+    }
+
+    public int w() {
+        return w;
+    }
+
     public int compareTo(Edge that, PerformanceTracker tracker) {
         if (tracker != null) tracker.incComparisons();
         return Double.compare(this.weight, that.weight);
