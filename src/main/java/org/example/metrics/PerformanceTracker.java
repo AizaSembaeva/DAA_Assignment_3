@@ -41,6 +41,8 @@ public class PerformanceTracker {
 
     public void incComparisons() { if (enabled) comparisons++; }
 
+    public void incComparisons(int number) { if (enabled) comparisons += number; }
+
     public void incUnions() { if (enabled) unions++; }
 
     public void incArrayAccesses() { if (enabled) arrayAccesses++; }
