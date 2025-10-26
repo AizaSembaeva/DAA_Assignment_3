@@ -45,4 +45,17 @@ public class KruskalMSTTest {
             assertTrue(tracker.getAllocations() >= 0);
         }
     }
+
+    @Test
+    void testDisconnectedGraph() throws IOException {
+        EdgeWeightedGraph graph = new EdgeWeightedGraph(4);
+        graph.addEdge(new Edge(0, 1, 1.0));
+
+        PerformanceTracker tracker = new PerformanceTracker();
+
+        Kruskal kruskal = new Kruskal(graph, tracker);
+
+        assertTrue(kruskal.isDisconnected(), "Kruskal should detect disconnected graph");
+        assertEquals(0, kruskal.weight());
+    }
 }

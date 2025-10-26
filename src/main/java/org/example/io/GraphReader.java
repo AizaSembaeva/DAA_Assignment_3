@@ -27,13 +27,15 @@ public class GraphReader {
             JsonNode nodes = gNode.get("nodes");
             JsonNode edges = gNode.get("edges");
 
+            if (nodes == null || nodes.size() == 0) throw new IllegalArgumentException("Graph " + id + " has no vertices");
+
             int verticesCount = nodes.size();
             EdgeWeightedGraph graph = new EdgeWeightedGraph(verticesCount);
             graph.setId(id);
 
             Map<String, Integer> nameToIndex = new HashMap<>();
             Map<Integer, String> indexToName = new HashMap<>();
-            for (int i = 0; i < nodes.size(); i++) {
+            for (int i = 0; i < verticesCount; i++) {
                 String name = nodes.get(i).asText();
                 nameToIndex.put(name, i);
                 indexToName.put(i, name);
@@ -43,6 +45,9 @@ public class GraphReader {
                 String from = e.get("from").asText();
                 String to = e.get("to").asText();
                 double weight = e.get("weight").asDouble();
+                if (!nameToIndex.containsKey(from) || !nameToIndex.containsKey(to))
+                    throw new IllegalArgumentException("Edge refers to non-existent vertex");
+                if (weight < 0) throw new IllegalArgumentException("Edge weight cannot be negative");
 
                 int v = nameToIndex.get(from);
                 int w = nameToIndex.get(to);

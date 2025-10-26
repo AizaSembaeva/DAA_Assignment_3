@@ -15,6 +15,7 @@ public class Prim {
     private final boolean[] marked;
     private final Queue<Edge> pq;
     private final PerformanceTracker tracker;
+    private final boolean disconnected;
 
     public Prim(EdgeWeightedGraph G, PerformanceTracker tracker) {
         this.tracker = tracker;
@@ -47,6 +48,9 @@ public class Prim {
             if (!marked[w]) visit(G, w);
         }
 
+        disconnected = mst.size() != V - 1;
+        if (disconnected) weight = 0;
+
         tracker.stop();
     }
 
@@ -72,5 +76,9 @@ public class Prim {
 
     public double weight() {
         return weight;
+    }
+
+    public boolean isDisconnected() {
+        return disconnected;
     }
 }
