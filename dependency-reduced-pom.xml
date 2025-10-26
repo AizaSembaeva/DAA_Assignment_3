@@ -7,8 +7,28 @@
   <build>
     <plugins>
       <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.11.0</version>
+        <configuration>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>org.openjdk.jmh</groupId>
+              <artifactId>jmh-generator-annprocess</artifactId>
+              <version>${jmh.version}</version>
+            </path>
+          </annotationProcessorPaths>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.2.3</version>
+        <configuration>
+          <useModulePath>false</useModulePath>
+        </configuration>
+      </plugin>
+      <plugin>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>3.5.0</version>
+        <version>3.5.2</version>
         <executions>
           <execution>
             <phase>package</phase>
@@ -18,9 +38,10 @@
             <configuration>
               <transformers>
                 <transformer>
-                  <mainClass>org.example.cli.CliRunner</mainClass>
+                  <mainClass>org.openjdk.jmh.Main</mainClass>
                 </transformer>
               </transformers>
+              <finalName>benchmarks</finalName>
             </configuration>
           </execution>
         </executions>
@@ -50,9 +71,11 @@
     </dependency>
   </dependencies>
   <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <jmh.version>1.37</jmh.version>
     <maven.compiler.target>23</maven.compiler.target>
-    <junit.jupiter.version>5.10.2</junit.jupiter.version>
     <maven.compiler.source>23</maven.compiler.source>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <commons.csv.version>1.10.0</commons.csv.version>
+    <junit.jupiter.version>5.10.2</junit.jupiter.version>
   </properties>
 </project>
