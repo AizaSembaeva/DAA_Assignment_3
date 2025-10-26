@@ -8,8 +8,8 @@ public class PerformanceTracker {
     private long unions;
     private long arrayAccesses;
     private long allocations;
-    private long startTimeNs;
-    private long executionTimeMs;
+    private double startTimeNs;
+    private double executionTimeMs;
     private boolean running;
 
 
@@ -35,7 +35,8 @@ public class PerformanceTracker {
 
     public void reset() {
         if (!enabled) return;
-        comparisons = unions = arrayAccesses = allocations = executionTimeMs = 0;
+        comparisons = unions = arrayAccesses = allocations = 0;
+        executionTimeMs = 0.0;
         running = false;
     }
 
@@ -61,7 +62,7 @@ public class PerformanceTracker {
 
     public long getAllocations() { return allocations; }
 
-    public long getExecutionTimeMs() { return executionTimeMs; }
+    public double getExecutionTimeMs() { return executionTimeMs; }
 
     public boolean isEnabled() { return enabled; }
 
