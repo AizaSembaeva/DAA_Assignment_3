@@ -1,0 +1,27 @@
+{
+  "results" : [ {
+    "graph_id" : 1,
+    "input_stats" : {
+      "vertices" : 4,
+      "edges" : 5
+    },
+    "Prim" : {
+      "mst_edges" : [ {
+        "from" : "A",
+        "to" : "C",
+        "weight" : 2.0
+      }, {
+        "from" : "A",
+        "to" : "B",
+        "weight" : 3.0
+      }, {
+        "from" : "C",
+        "to" : "D",
+        "weight" : 5.0
+      } ],
+      "total_cost" : 10.0,
+      "operations_count" : 46,
+      "execution_time_ms" : 0.054
+    }
+  } ]
+}
