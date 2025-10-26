@@ -13,6 +13,7 @@ public class Kruskal {
     private final List<Edge> mst;
     private double weight;
     private final PerformanceTracker tracker;
+    private final boolean disconnected;
 
     public Kruskal(EdgeWeightedGraph G, PerformanceTracker tracker) {
         this.tracker = tracker;
@@ -48,6 +49,9 @@ public class Kruskal {
             }
         }
 
+        disconnected = mst.size() != G.V() - 1;
+        if (disconnected) weight = 0;
+
         tracker.stop();
     }
 
@@ -57,5 +61,9 @@ public class Kruskal {
 
     public double weight() {
         return weight;
+    }
+
+    public boolean isDisconnected() {
+        return disconnected;
     }
 }

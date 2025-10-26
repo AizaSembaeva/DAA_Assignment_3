@@ -47,4 +47,18 @@ public class PrimMSTTest {
             assertTrue(tracker.getComparisons() >= 0);
         }
     }
+
+    @Test
+    void testDisconnectedGraph() throws IOException {
+        EdgeWeightedGraph graph = new EdgeWeightedGraph(4);
+        graph.addEdge(new Edge(0, 1, 1.0));
+
+        PerformanceTracker tracker = new PerformanceTracker();
+
+        Prim prim = new Prim(graph, tracker);
+
+        assertTrue(prim.isDisconnected(), "Prim should detect disconnected graph");
+        assertEquals(0, prim.weight());
+
+    }
 }
