@@ -3,6 +3,7 @@ package org.example.metrics;
 import org.json.JSONObject;
 
 public class PerformanceTracker {
+    private final boolean enabled;
     private long comparisons;
     private long unions;
     private long arrayAccesses;
@@ -11,67 +12,60 @@ public class PerformanceTracker {
     private long executionTimeMs;
     private boolean running;
 
+
+    public PerformanceTracker() {
+        this(true);
+    }
+
+    public PerformanceTracker(boolean enabled) {
+        this.enabled = enabled;
+    }
+
     public void start() {
-        if (!running) {
-            running = true;
-            startTimeNs = System.nanoTime();
-        }
+        if (!enabled || running) return;
+        running = true;
+        startTimeNs = System.nanoTime();
     }
 
     public void stop() {
-        if (running) {
-            executionTimeMs = (System.nanoTime() - startTimeNs) / 1_000_000;
-            running = false;
-        }
+        if (!enabled || !running) return;
+        executionTimeMs = (System.nanoTime() - startTimeNs) / 1_000_000;
+        running = false;
     }
 
     public void reset() {
+        if (!enabled) return;
         comparisons = unions = arrayAccesses = allocations = executionTimeMs = 0;
         running = false;
     }
 
-    public void incComparisons() {
-        comparisons++;
-    }
+    public void incComparisons() { if (enabled) comparisons++; }
 
-    public void incUnions() {
-        unions++;
-    }
+    public void incUnions() { if (enabled) unions++; }
 
-    public void incArrayAccesses() {
-        arrayAccesses++;
-    }
+    public void incArrayAccesses() { if (enabled) arrayAccesses++; }
 
-    public void incArrayAccesses(int number) {
-        arrayAccesses += number;
-    }
+    public void incArrayAccesses(int number) { if (enabled) arrayAccesses += number; }
 
-    public void incAllocations() {
-        allocations++;
-    }
+    public void incAllocations() { if (enabled) allocations++; }
 
-    public long getComparisons() {
-        return comparisons;
-    }
+    public void incAllocations(int number) { if (enabled) comparisons += number; }
 
-    public long getUnions() {
-        return unions;
-    }
+    public long getComparisons() { return comparisons; }
 
-    public long getArrayAccesses() {
-        return arrayAccesses;
-    }
+    public long getUnions() { return unions; }
 
-    public long getAllocations() {
-        return allocations;
-    }
+    public long getArrayAccesses() { return arrayAccesses; }
 
-    public long getExecutionTimeMs() {
-        return executionTimeMs;
-    }
+    public long getAllocations() { return allocations; }
+
+    public long getExecutionTimeMs() { return executionTimeMs; }
+
+    public boolean isEnabled() { return enabled; }
 
     public JSONObject toJson() {
         JSONObject obj = new JSONObject();
+        obj.put("enabled", enabled);
         obj.put("comparisons", comparisons);
         obj.put("unions", unions);
         obj.put("arrayAccesses", arrayAccesses);
@@ -81,7 +75,8 @@ public class PerformanceTracker {
     }
 
     public String toCsvRow(String dataset, int vertices, int edges, String algorithm, double totalCost) {
-        return String.format("%s,%d,%d,%s,%.2f,%d,%d,%d,%d,%d",
+        return String.format(
+                "%s,%d,%d,%s,%.2f,%d,%d,%d,%d,%d",
                 dataset,
                 vertices,
                 edges,
